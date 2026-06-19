@@ -1,0 +1,58 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+      routes:
+        - id: user-service-auth
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/auth/**
+        - id: user-service-sub
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/subscriptions/**
+          filters:
+            - JwtAuthFilter
+        - id: user-service-me
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/users/**
+          filters:
+            - JwtAuthFilter
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/api/v1/notifications/**
+          filters:
+            - JwtAuthFilter
+        - id: tracker-service
+          uri: lb://tracker-service
+          predicates:
+            - Path=/api/v1/goals/**, /api/v1/resources/**, /api/v1/roadmaps/**, /api/v1/study-sessions/**, /api/v1/certifications/**, /api/v1/notes/**, /api/v1/revisions/**, /api/v1/interview-topics/**, /api/v1/categories/**
+          filters:
+            - JwtAuthFilter
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET:5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437}
