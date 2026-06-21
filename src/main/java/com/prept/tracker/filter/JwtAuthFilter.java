@@ -53,6 +53,7 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
             try {
                 Claims claims = Jwts.parser()
                         .verifyWith(getSigningKey())
+                        .clockSkewSeconds(60)
                         .build()
                         .parseSignedClaims(token)
                         .getPayload();
@@ -85,6 +86,8 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                 return chain.filter(exchange.mutate().request(mutatedRequest).build());
 
             } catch (JwtException e) {
+                System.err.println("JWT validation failed: " + e.getMessage());
+                e.printStackTrace();
                 return onError(exchange, "JWT validation failed: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
             }
         };

@@ -43,7 +43,7 @@ spring:
         - id: tracker-service
           uri: lb://tracker-service
           predicates:
-            - Path=/api/v1/goals/**, /api/v1/resources/**, /api/v1/roadmaps/**, /api/v1/study-sessions/**, /api/v1/certifications/**, /api/v1/notes/**, /api/v1/revisions/**, /api/v1/interview-topics/**, /api/v1/categories/**
+            - Path=/api/v1/goals/**, /api/v1/resources/**, /api/v1/roadmaps/**, /api/v1/study-sessions/**, /api/v1/certifications/**, /api/v1/notes/**, /api/v1/revisions/**, /api/v1/interview-topics/**, /api/v1/categories/**, /api/v1/dashboard/**, /api/v1/preparation-plans/**
           filters:
             - JwtAuthFilter
 
